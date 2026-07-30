@@ -1,0 +1,6 @@
+#### File 2: `requirements.txt`
+*(Tells Railway what external engines to install)*
+```text
+discord.py
+requests
+beautifulsoup4
