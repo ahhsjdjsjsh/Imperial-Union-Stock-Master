@@ -183,9 +183,9 @@ async def gacha_cmd(interaction: discord.Interaction):
 
 # --- ⚔️ Multiplayer Boss Raid Simulations ---
 
-@bot.tree.command(name="raid", description="Form a team battle party to raid legendary bosses")
-@app_commands.autocomplete(boss=boss_autocomplete)
-async def raid_cmd(interaction: discord.Interaction, boss: str):
+@bot.tree.command (name="raid", description="Form a team battle party to raid legendary bosses")
+@app_commands.autocomplete (boss=boss_autocomplete)
+async def raid_cmd (interaction: discord.Interaction, boss: str):
     if boss.lower() not in BOSS_POOL:
         return await interaction.response.send_message("❌ Target boss profile signature not found.", ephemeral=True)
         
@@ -194,8 +194,8 @@ async def raid_cmd(interaction: discord.Interaction, boss: str):
     
     success_rate = random.randint(40, 95)
     if success_rate > 55:
-        update_currency(interaction.user.id, boss_data["beli_reward"], boss_data["frag_reward"])
-        embed = discord.Embed(title="⚔️ RAID BOSS VICTORY!", color=discord.Color.gold())
+        update_currency (interaction.user.id, boss_data["beli_reward"], boss_data["frag_reward"])
+        embed = discord.Embed (title="⚔️ RAID BOSS VICTORY!", color=discord.Color.gold())
         embed.description = f"Your raid party defeated {boss.replace('_',' ').title()} cleanly!\n🎁 Reward Payload: +${boss_data['beli_reward']:,} Beli & +{boss_data['frag_reward']:,} Fragments!"
     else:
         embed = discord.Embed(title="💀 RAID PARTY WIPED", color=discord.Color.red())
