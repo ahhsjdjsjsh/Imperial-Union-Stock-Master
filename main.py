@@ -202,3 +202,21 @@ async def inventory_cmd(interaction: discord.Interaction):
     await interaction.response.send_message(embed=embed)
 
 @bot.tree.command(name="raid", description="Form a team battle party to raid legendary bosses")
+@app_commands.autocomplete(boss=boss_autocomplete)
+async def raid_cmd(interaction: discord.Interaction, boss: str):
+    if boss.lower() not in BOSS_POOL:
+        return await interaction.response.send_message("❌ Target boss profile signature not found.", ephemeral=True)
+        
+    await interaction.response.defer()
+    boss_data = BOSS_POOL[boss.lower()]
+    
+    success_rate = random.randint(40, 95)
+    if success_rate > 55:
+        update_currency(interaction.user.id, boss_data["beli_reward"], boss_data["frag_reward"])
+        embed = discord.Embed(title="⚔️ RAID BOSS VICTORY!", color=discord.Color.gold())
+        embed.description = f"Your raid party defeated **{boss.replace('_',' ').title()}** cleanly!\n🎁 Reward Payload: **+${boss_data['beli_reward']:,} Beli** & **+{boss_data['frag_reward']:,} Fragments**!"
+    else:
+        embed = discord.Embed(title="💀 RAID PARTY WIPED", color=discord.Color.red())
+        embed.description = f"**{boss.replace('_',' ').title()}** overpowered your defense lines. Better luck next time!"
+        
+    await interaction.followup.send(embed=embed)
