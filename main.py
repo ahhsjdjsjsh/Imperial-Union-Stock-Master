@@ -181,25 +181,7 @@ async def gacha_cmd(interaction: discord.Interaction):
     embed.description = f"{interaction.user.mention} rolled a **{rolled.title()} Fruit** ({meta['rarity']})!\nStored directly to `/inventory`."
     await interaction.response.send_message(embed=embed)
 
-@bot.tree.command(name="inventory", description="View your permanently saved items, scrolls, and fruit blocks")
-async def inventory_cmd(interaction: discord.Interaction):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT item_name FROM inventory WHERE user_id = ?", (interaction.user.id,))
-    rows = cursor.fetchall()
-    conn.close()
-    
-    if not rows:
-        return await interaction.response.send_message("🎒 Your inventory chest is completely empty. Start rolling with `/gacha`!", ephemeral=True)
-        
-    items_dict = {}
-    for r in rows:
-        name = r[0]
-        items_dict[name] = items_dict.get(name, 0) + 1
-        
-    inv_desc = "\n".join([f"🍉 **{name.title()} Fruit** ×{count}" for name, count in items_dict.items()])
-    embed = discord.Embed(title=f"🎒 {interaction.user.display_name}'s Storage Chest", description=inv_desc, color=discord.Color.orange())
-    await interaction.response.send_message(embed=embed)
+# --- ⚔️ Multiplayer Boss Raid Simulations ---
 
 @bot.tree.command(name="raid", description="Form a team battle party to raid legendary bosses")
 @app_commands.autocomplete(boss=boss_autocomplete)
@@ -214,9 +196,9 @@ async def raid_cmd(interaction: discord.Interaction, boss: str):
     if success_rate > 55:
         update_currency(interaction.user.id, boss_data["beli_reward"], boss_data["frag_reward"])
         embed = discord.Embed(title="⚔️ RAID BOSS VICTORY!", color=discord.Color.gold())
-        embed.description = f"Your raid party defeated **{boss.replace('_',' ').title()}** cleanly!\n🎁 Reward Payload: **+${boss_data['beli_reward']:,} Beli** & **+{boss_data['frag_reward']:,} Fragments**!"
+        embed.description = f"Your raid party defeated {boss.replace('_',' ').title()} cleanly!\n🎁 Reward Payload: +${boss_data['beli_reward']:,} Beli & +{boss_data['frag_reward']:,} Fragments!"
     else:
         embed = discord.Embed(title="💀 RAID PARTY WIPED", color=discord.Color.red())
-        embed.description = f"**{boss.replace('_',' ').title()}** overpowered your defense lines. Better luck next time!"
+        embed.description = f"{boss.replace('_',' ').title()} overpowered your defense lines. Better luck next time!"
         
     await interaction.followup.send(embed=embed)
