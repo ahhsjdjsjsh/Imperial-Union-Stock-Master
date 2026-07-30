@@ -202,4 +202,3 @@ async def inventory_cmd(interaction: discord.Interaction):
     await interaction.response.send_message(embed=embed)
 
 @bot.tree.command(name="raid", description="Form a team battle party to raid legendary bosses")
-
